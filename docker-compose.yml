@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  rabbitmq_v1:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"     # RabbitMQ messaging port
+      - "15672:15672"   # RabbitMQ management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+  order_service:
+    build:
+      context: ./order_service
+      dockerfile: Dockerfile
+    container_name: order_service
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./order_service:/app
+    depends_on:
+      - rabbitmq_v1
+
+  inventory_service:
+    build:
+      context: .
+      dockerfile: inventory_service/Dockerfile
+    container_name: inventory_service
+    depends_on:
+      - rabbitmq_v1
+
+  payment_service:
+    build:
+      context: .
+      dockerfile: payment_service/Dockerfile
+    container_name: payment_service
+    depends_on:
+      - rabbitmq_v1
+
+  notification_service:
+    build:
+      context: .
+      dockerfile: notification_service/Dockerfile
+    container_name: notification_service
+    depends_on:
+      - rabbitmq_v1
