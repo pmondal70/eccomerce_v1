@@ -32,6 +32,6 @@ def jwt_manager(app):
         if not user or user.hashed_password != request.password:
             raise HTTPException(status_code=401, detail="Invalid username or password")
         token = jwt.encode({"sub": str(user.id)}, SECRET_KEY, algorithm=ALGORITHM)
-        return {"access_token": token, "token_type": "bearer"}
+        return {"access_token": token, "user": user, "token_type": "bearer"}
 
     app.include_router(router, prefix="/auth", tags=["auth"])
