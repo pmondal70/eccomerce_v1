@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, Float
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
@@ -16,13 +16,10 @@ def get_db():
     finally:
         db.close()
 
-class Order(Base):
-    __tablename__ = "orders"
-
+class Product(Base):
+    __tablename__ = "products"
     id = Column(Integer, primary_key=True, index=True)
-    item_id = Column(Integer, nullable=False)
-    quantity = Column(Integer, nullable=False)
-    user_id = Column(Integer, nullable=False)
-
-
-
+    name = Column(String, nullable=False)
+    description = Column(String)
+    price = Column(Float, nullable=False)
+    stock = Column(Integer, default=0)
